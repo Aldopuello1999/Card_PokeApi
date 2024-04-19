@@ -1,17 +1,22 @@
 @extends('layouts.app')
 
     @section('content')
-        <div class="row">
-            @foreach ($pokemons as $pokemon)
-                <div class="col-md-4">
-                    <div class="card">
-                        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ $loop->index + 1 }}.png" class="card-img-top" alt="{{ $pokemon->name }}">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ $pokemon->name }}</h5>
-                            {{-- <a href="{{ route('pokemon.show', $loop->index + 1) }}" class="btn btn-primary">Ver detalles</a> --}}
-                        </div>
+        <div class="row justify-content-center text-center">
+                @foreach ($pokemons as $pokemon)
+                {{-- {{dd($pokemon)}} --}}
+                <div class="card" style="width: 18rem;">
+                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{{ $loop->index + 1 }}.png" class="card-img-top">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ $pokemon->name }}</h5>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <a href="#" class="btn btn-primary">Go somewhere</a>
                     </div>
                 </div>
-            @endforeach
+                @endforeach
+                {{-- <div class="card-footer py-4">
+                    <nav class="d-flex justify-content-end" aria-label="...">
+                        {{ $pokemons->links('pagination::bootstrap-4') }}
+                    </nav>
+                </div> --}}
         </div>
     @endsection

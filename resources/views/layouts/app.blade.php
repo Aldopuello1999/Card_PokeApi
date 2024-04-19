@@ -10,7 +10,7 @@
 </head>
 <body>
     <nav>
-        <!-- Aquí va la barra de navegación -->
+        @include('layouts.navbar.navbar')<!-- Aquí va la barra de navegación -->
     </nav>
 
     <div class="container">
@@ -23,4 +23,6 @@
 
     <!-- Agrega aquí tus enlaces a archivos JavaScript, si es necesario -->
 </body>
+    <!-- Scripts Bootstrap  -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </html>

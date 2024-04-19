@@ -14,10 +14,12 @@ class PokemonController extends Controller
     public function index()
     {
         $client = new Client();
-        $response = $client->get('https://pokeapi.co/api/v2/pokemon?limit=10'); // Cambia el límite según tus necesidades
+        $response = $client->get('https://pokeapi.co/api/v2/pokemon-species/?limit=100'); // Cambia el límite según tus necesidades
         $data = json_decode($response->getBody());
 
+        // dd($data);
         $pokemons = $data->results;
+        $data = ['data'];
 
 
         return view('Pokemon.index', compact('pokemons'));
