@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class PokemonController extends Controller
 {
@@ -16,9 +17,8 @@ class PokemonController extends Controller
     {
         $client = new Client();
         $response = $client->get('https://pokeapi.co/api/v2/pokemon-species/?limit=200'); // Cambia el límite según tus necesidades
-        $data = json_decode($response->getBody());
+        $data = json_decode($response->getBody(), true);
         // dd($data);
-        $pokemons = $data->results;
         if ($response->getStatusCode() !== 200) {
             return response()->json([
                 'success' => false,
@@ -27,8 +27,17 @@ class PokemonController extends Controller
             ]);
         }
 
+        $pokemons = collect($data['results']);
 
-        return view('Pokemon.index', compact('pokemons'));
+        // Paginación manual
+        $perPage = 20; // Número de elementos por página
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $currentPageItems = $pokemons->slice(($currentPage - 1) * $perPage, $perPage)->all();
+
+        $paginatedPokemons = new LengthAwarePaginator($currentPageItems, $pokemons->count(), $perPage);
+        $paginatedPokemons->setPath(request()->url());
+
+        return view('Pokemon.index', ['paginatedPokemons' => $paginatedPokemons]);
     }
 
     /**

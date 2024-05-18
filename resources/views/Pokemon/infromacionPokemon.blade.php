@@ -1,102 +1,53 @@
-<div class="modal fade" id="detalleModal{{ $pokemon->name }}" tabindex="-1" role="dialog" aria-labelledby="detalleModalLabel"
-    aria-hidden="true">
+<div class="modal fade" id="detalleModal{{ $pokemon['name'] }}" tabindex="-1" role="dialog" aria-labelledby="detalleModalLabel{{ $pokemon['name'] }}" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel1">Crear Usuario</h5>
+                <h5 class="modal-title" id="detalleModalLabel{{ $pokemon['name'] }}">Detalles de {{ $pokemon['name'] }}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            {{-- <div class="modal-body">
-                <form id="formCreateUser" method="post" action="{{ route('usuarios.store') }}">
-                    @csrf
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="nombreUsuario" class="form-control-label">Nombre</label>
-                            <input type="text" name="name" class="form-control form-control-alternative"
-                                id="nombreUsuario" placeholder="Nombre">
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="apellidoUsuario" class="form-control-label">Apellido</label>
-                            <input type="text" name="lastname" class="form-control form-control-alternative"
-                                id="apellidoUsuario" placeholder="Apellido">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="tipoIdUsuario" class="form-control-label">Tipo identificación</label>
-                            <select id="sptipoIdUsuario" name="document_type"
-                                class="form-control form-control-alternative">
-                                <option selected disabled>-- Seleccione --</option>
-                                @foreach ($tipoids as $item)
-                                    <option value="{{ $item->id }}">{{ $item->nombre }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="idUsuario" class="form-control-label">Identificación</label>
-                            <input type="numeric" name="identification" class="form-control form-control-alternative"
-                                id="idUsuario" placeholder="Identificación">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="username" class="form-control-label">Username</label>
-                            <input type="text" name="username" class="form-control form-control-alternative"
-                                id="username" placeholder="Usuario123">
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="correoUsuario" class="form-control-label">Correo</label>
-                            <input type="email" name="email" class="form-control form-control-alternative"
-                                id="correoUsuario" placeholder="Usuario123@gmail.com" required>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="password" class="form-control-label">Contraseña</label>
-                            <input type="password" name="password" class="form-control form-control-alternative"
-                                id="password" placeholder="Contraseña">
-                            <small class="text-muted">
-                                Debe tener al menos 8 caracteres.
-                            </small>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="checkPassword" class="form-control-label">Confirmar contraseña</label>
-                            <input type="password" name="password_confirmation"
-                                class="form-control form-control-alternative" id="checkPassword"
-                                placeholder="Contraseña">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="perfilUsuario" class="form-control-label">Rol</label>
-                            <select id="perfilUsuario" name="role_id" class="form-control form-control-alternative">
-                                <option selected disabled>-- Seleccione --</option>
-                                @foreach ($roles as $item)
-                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="empresa" class="form-control-label">Empresa</label>
-                            <select id="enterprise_id" name="enterprise_id"
-                                class="form-control form-control-alternative">
-                                <option selected disabled>-- Seleccione --</option>
-                                @foreach ($empresas as $item)
-                                <option value="{{$item->id}}">{{$item->name}}</option>
-                            @endforeach
-                            </select>
-                        </div>
-                    </div>
-            </div> --}}
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button type="submit" class="btn btn-primary">Crear</button>
+            <div class="modal-body" style="width: 18rem; justify-content: center">
+                <img src="https://img.pokemondb.net/sprites/home/normal/{{ $pokemon['name'] }}.png" class="card-img-top">
+                <div id="pokemonInfo{{ $pokemon['url'] }}"></div>
             </div>
-
+            {{-- <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div> --}}
         </div>
-        </form>
-
     </div>
 </div>
+
+<script>
+    $(document).ready(function() {
+        $('#detalleModal{{ $pokemon['name'] }}').on('show.bs.modal', function() {
+            fetch('{{ $pokemon['url'] }}')
+                .then(response => response.json())
+                .then(data => {
+                    const baseHappiness = data.base_happiness;
+                    const captureRate = data.capture_rate;
+                    const color = data.color.name;
+                    const eggGroups = data.egg_groups.map(group => group.name).join(', ');
+                    const evolutionChainUrl = data.evolution_chain.url;
+
+                    let flavorText = '';
+                    data.flavor_text_entries.forEach(entry => {
+                        if (entry.language.name === 'es' && entry.version.name === 'red') {
+                            flavorText = entry.flavor_text.replace('\n', ' ');
+                        }
+                    });
+
+                    const modalBody = document.getElementById('detalleModal{{ $pokemon['name'] }}').getElementsByClassName('modal-body')[0];
+                    modalBody.innerHTML += `
+                        <p><strong>Base Happiness:</strong> ${baseHappiness}</p>
+                        <p><strong>Capture Rate:</strong> ${captureRate}</p>
+                        <p><strong>Color:</strong> ${color}</p>
+                        <p><strong>Egg Groups:</strong> ${eggGroups}</p>
+                        <p><strong>Evolution Chain URL:</strong> ${evolutionChainUrl}</p>
+                        <p><strong>Flavor Text:</strong> ${flavorText}</p>
+                    `;
+                });
+        });
+    });
+</script>
+
