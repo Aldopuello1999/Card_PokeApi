@@ -20,3 +20,4 @@ Route::get('/', function () {
 
 
 Route::get('/', [PokemonController::class, 'index'])->name('Pokemon.index');
+

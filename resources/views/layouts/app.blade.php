@@ -7,6 +7,7 @@
     <!-- icono -->
     <link rel="icon" href="https://slackmojis.com/emojis/186-pokeball/download">
     <!-- Agrega aquí tus enlaces a archivos CSS, si es necesario -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <nav>
